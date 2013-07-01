@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SVG TIME GRAPHICS</title>
+	<script type="text/javascript" src="./lib/time-graphics.js"></script>
+	<style type="text/css">
+
+div#mychart{
+	width: 1200px;
+	height: 500px;
+	border: 1px solid #f99;
+}
+
+	</style>
+</head>
+<body>
+<h1>SVG TIME GRAPHICS</h1>
+
+<div id="mychart"></div>
+
+<!--
+<svg xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+	<svg x="10" style="fill:red;">
+		<rect x="100" y="100" height="10" width="10"/>
+	</svg>
+	<svg x="200">
+		<rect x="10" y="10" height="100" width="100" style="stroke:#009900;fill: #00cc00"/>
+		<text x="10" y="20" 
+				font-family="Verdana" font-size="12" fill="blue" >
+		Hello, out there
+	</text>
+	</svg>
+</svg>
+-->
+
+<script type="text/javascript">
+/*
+var aData = [{date:new Date().getTime() - 1e6, height:0}], aData2 = [{date:new Date().getTime() - 1e6, height:0}];
+for (var i = 1; i < 1000; i++) {
+	aData.push({date: new Date().getTime() - 1e6 + 1000*i, height: -0.5+Math.random() + aData[i-1].height });
+	aData2.push({date: new Date().getTime() - 1e6 + 1000*i, height: -1+2*Math.random() + aData2[i-1].height });
+}
+*/
+var aData = [];
+for (var i = 0; i < 10; i++) {
+	aData.push({date: new Date().getTime() - 1e6 + 1000*i, height: Math.random()});
+}
+var aData2 = [];
+for (var i = 0; i < 10; i++) {
+	aData2.push({date: new Date().getTime() - 1e6 + 1000*i, height: 10+Math.random()});
+}
+//console.dir(aData);
+function randomFromInterval(from,to)
+{
+    return Math.floor(Math.random()*(to-from+1)+from);
+}
+var getDataFromServer = function(oRange){
+	//since and until
+	var aData = [];
+	for (var i = 0; i < 10; i++) {
+		aData.push({date: randomFromInterval(oRange.since, oRange.until) , height:Math.random()});
+	}
+	return aData;
+};
+
+var oGraph = new Graphic('mychart');
+var sId = oGraph.addFunction(aData, {value: 'height'/*, date: 'date'*/, color: 'red'});
+var sId2 = oGraph.addFunction(aData2, {value: 'height'/*, date: 'date'*/, color: 'green'});
+var aOccurrences = [
+	{date: randomFromInterval(aData[0].date, aData.slice(-1)[0].date), occurrence: 'Occurrence 1'},
+	{date: randomFromInterval(aData[0].date, aData.slice(-1)[0].date), occurrence: 'Occurrence 2'},
+];
+oGraph.addOccurrences(aOccurrences, sId);
+//oGraph.addFunction(aData2, {value: 'height'/*, date: 'date'*/, color: 'blue'});
+oGraph.addListener('select', function(oEvent){
+	console.dir(oEvent);
+	var aNewData = getDataFromServer(oEvent);
+	oGraph.addNewData(aNewData, sId);
+});
+
+</script>
+
+</body>
+</html>
