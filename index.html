@@ -6,7 +6,7 @@
 	<style type="text/css">
 
 div#mychart{
-	width: 1200px;
+	width: 960px;
 	height: 500px;
 	border: 1px solid #f99;
 }
@@ -77,6 +77,8 @@ oGraph.addListener('select', function(oEvent){
 	console.dir(oEvent);
 	var aNewData = getDataFromServer(oEvent);
 	oGraph.addNewData(aNewData, sId);
+	var aNewData2 = getDataFromServer(oEvent);
+	oGraph.addNewData(aNewData2, sId2);
 });
 
 </script>
